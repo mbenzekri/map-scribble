@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Canvas Tiles</title>
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=fetch,requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <style>html,
+        body {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            height: 100%;
+        }
+
+        .map {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+        .leftpanel{
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100000;
+            background-color: white;
+        }</style>
+<link rel="stylesheet" href="/map-scribble.e31bb0bc.css"></head>
+
+<body>
+    <div id="map" class="map">
+        <div class="leftpanel"> <h1>PANEL</h1> </div>
+    </div>
+    
+    <script src="/map-scribble.e31bb0bc.js"></script>
+</body>
+
+</html>

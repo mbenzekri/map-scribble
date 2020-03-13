@@ -21,6 +21,6 @@
     "ol": "6.2.1"
   },
   "devDependencies": {
-    "parcel": "1.11.0"
+    "parcel": "^1.12.4"
   }
 }
