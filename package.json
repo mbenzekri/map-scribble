@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "parcel index.html",
-    "build": "parcel build --experimental-scope-hoisting --public-url ./ index.html"
+    "build": "parcel build --experimental-scope-hoisting --public-url ././ --no-content-hash index.html"
   },
   "repository": {
     "type": "git",
