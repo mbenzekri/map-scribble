@@ -1,0 +1,26 @@
+{
+  "name": "map-scribble",
+  "version": "1.0.0",
+  "author": "Mohamed Ben Zekri",
+  "title": "XYZ Tiles for France communes",
+  "description": "static site for serving XYZ Tiles for thematic rendering",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build --experimental-scope-hoisting --public-url ./ index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mbenzekri/map-scribble.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mbenzekri/map-scribble/issues"
+  },
+  "homepage": "https://github.com/mbenzekri/map-scribble.git#readme",
+  "dependencies": {
+    "ol": "6.2.1"
+  },
+  "devDependencies": {
+    "parcel": "1.11.0"
+  }
+}
