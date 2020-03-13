@@ -62477,58 +62477,6 @@ var _TileLayer = _interopRequireDefault(require("ol/renderer/canvas/TileLayer.js
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mapcolor = new window.Map();
-var xyz = new _source.XYZ({
-  url: 'https://mbenzekri.github.io/frcommunes/fr/communes/{z}/{x}/{y}.png',
-  maxZoom: 12,
-  minZoom: 5,
-  crossOrigin: 'anonymous',
-  tileSize: 256,
-  transition: 0,
-  opaque: false
-});
-var rastersource = new _source.Raster({
-  sources: [xyz],
-  operation: function operation(pixels, data) {
-    var pixel = pixels[0];
-    if (pixel[3] === 0) return pixel;
-    var hcolor = (pixel[0] * 256 + pixel[1]) * 256 + pixel[2];
-    var key = parseInt(hcolor.toString(16), 10).toString().padStart(6, '0');
-    var color = mapcolor.get(key);
-
-    if (!color) {
-      var r = Math.ceil(Math.random() * 256);
-      var g = Math.ceil(Math.random() * 256);
-      var b = Math.ceil(Math.random() * 256);
-      color = [r, g, b, pixel[3]];
-      mapcolor.set(key, color);
-    }
-
-    return color;
-  },
-  threads: 0
-});
-var thematiclayer = new _Image.default({
-  source: rastersource,
-  transition: 0
-});
-var debuglayer = new _Tile.default({
-  source: new _source.TileDebug(),
-  visible: false
-});
-var map = new _Map.default({
-  layers: [new _Tile.default({
-    source: new _source.OSM()
-  }), thematiclayer, debuglayer],
-  target: 'map',
-  view: new _View.default({
-    center: [260000, 6250000],
-    zoom: 5,
-    zoomFactor: 2
-  })
-});
-thematiclayer.on('prerender', function (evt) {});
-
 _TileLayer.default.prototype.drawTileImage = function (tile, frameState, x, y, w, h, gutter, transition, opacity) {
   var image = this.getTileImage(tile);
 
@@ -62562,20 +62510,102 @@ _TileLayer.default.prototype.drawTileImage = function (tile, frameState, x, y, w
   }
 };
 
-function bindInputs(layerid, layer) {
+var xyzurl = 'https://mbenzekri.github.io/fr-communes/fr/communes';
+var mapcolor = new window.Map();
+
+function initScribble() {
+  var xyz = new _source.XYZ({
+    url: xyzurl + '/{z}/{x}/{y}.png',
+    maxZoom: 12,
+    minZoom: 5,
+    crossOrigin: 'anonymous',
+    tileSize: 256,
+    transition: 0,
+    opaque: false
+  });
+  var rastersource = new _source.Raster({
+    sources: [xyz],
+    operation: function operation(pixels, data) {
+      var pixel = pixels[0];
+      if (pixel[3] === 0) return pixel;
+      var key = pixel2key(pixel);
+      var props = mapcolor.get(key);
+      return props ? props.color : pixel;
+    },
+    threads: 0
+  });
+  var thematiclayer = new _Image.default({
+    source: rastersource,
+    transition: 0
+  });
+  var debuglayer = new _Tile.default({
+    source: new _source.TileDebug(),
+    visible: false
+  });
+  var map = new _Map.default({
+    layers: [new _Tile.default({
+      source: new _source.OSM()
+    }), thematiclayer, debuglayer],
+    target: 'map',
+    view: new _View.default({
+      center: [260000, 6250000],
+      zoom: 5,
+      zoomFactor: 2
+    })
+  });
+  thematiclayer.on('prerender', function (evt) {});
   var debugcheck = document.getElementById('debugcheck');
   var thematiccheck = document.getElementById('thematiccheck');
-  var visibilityInput = $(layerid + ' input.visible');
-  visibilityInput.on('change', function () {
-    layer.setVisible(this.checked);
-  });
-  visibilityInput.prop('checked', layer.getVisible());
-  var opacityInput = $(layerid + ' input.opacity');
-  opacityInput.on('input change', function () {
-    layer.setOpacity(parseFloat(this.value));
-  });
-  opacityInput.val(String(layer.getOpacity()));
+
+  debugcheck.onchange = function () {
+    debuglayer.setVisible(this.checked);
+  };
+
+  thematiccheck.onchange = function () {
+    thematiclayer.setVisible(this.checked);
+  };
+
+  debugcheck.checked = debuglayer.getVisible();
+  thematiccheck.checked = thematiclayer.getVisible();
 }
+
+function load() {
+  return new Promise(function (resolve, reject) {
+    var script = document.createElement('script');
+
+    script.onload = function (evt) {
+      resolve(evt);
+    };
+
+    script.onerror = function (evt) {
+      reject(evt);
+    };
+
+    script.src = xyzurl + '.js';
+    document.head.appendChild(script);
+  });
+}
+
+load().then(function (evt) {
+  console.log(evt);
+  return fetch(xyzurl + '.json').then(function (resp) {
+    return resp.json();
+  });
+}).then(function (data) {
+  data.forEach(function (kvp) {
+    var r = Math.ceil(Math.random() * 256);
+    var g = Math.ceil(Math.random() * 256);
+    var b = Math.ceil(Math.random() * 256);
+    var color = [r, g, b, 255];
+    mapcolor.set(kvp.key, {
+      color: color,
+      name: kvp.name
+    });
+  });
+  initScribble();
+}).catch(function (evt) {
+  return console.log(evt);
+});
 },{"ol/ol.css":"node_modules/ol/ol.css","ol/util.js":"node_modules/ol/util.js","ol/Map":"node_modules/ol/Map.js","ol/View":"node_modules/ol/View.js","ol/layer/Tile":"node_modules/ol/layer/Tile.js","ol/layer/Image":"node_modules/ol/layer/Image.js","ol/source":"node_modules/ol/source.js","ol/renderer/canvas/TileLayer.js":"node_modules/ol/renderer/canvas/TileLayer.js"}],"node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -62604,7 +62634,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56007" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61483" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

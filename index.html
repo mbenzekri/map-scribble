@@ -23,7 +23,11 @@
         .leftpanel{
             position: absolute;
             top: 10px;
+            bottom: 10px;
+            width: 400px;
             left: 10px;
+            border-radius: 10px;
+            padding: 10px;
             z-index: 100000;
             background-color: white;
         }
@@ -32,7 +36,13 @@
 
 <body>
     <div id="map" class="map">
-        <div class="leftpanel"> <h1>PANEL</h1> </div>
+        <div class="leftpanel"> 
+            <h1>Scribble your map !</h1>
+            <p>
+                <label for="thematiccheck"><input type="checkbox" id="thematiccheck">Thematic</label>
+                <label for="debugcheck"><input type="checkbox" id="debugcheck">Coordinates</label>
+            </p> 
+        </div>
     </div>
     
     <script src="./index.js"></script>
